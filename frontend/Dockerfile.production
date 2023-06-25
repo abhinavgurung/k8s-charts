@@ -1,0 +1,61 @@
+# BUILD STAGE
+FROM node:16.15.0-alpine3.15 as BUILD
+
+# Variable the pipeline passes in that identifies the build version.
+ARG IMAGE_TAG
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the project files to the container
+COPY . /app
+
+# Add French locale information to be able to generate bilingual last modified dates.
+# https://github.com/gliderlabs/docker-alpine/issues/144#issuecomment-505356435
+# ENV MUSL_LOCPATH=/usr/local/share/i18n/locales/musl
+# RUN apk add --no-cache --update git cmake make musl-dev gcc gettext-dev libintl tzdata
+# RUN cd /tmp && git clone https://gitlab.com/rilian-la-te/musl-locales.git
+# RUN cd /tmp/musl-locales && cmake . && make && make install
+
+# Update NPM
+RUN npm install -g npm@8.19.4
+
+# Install node production dependencies
+RUN npm install --silent --only=production
+
+# Optimize node.js apps for production
+ENV NODE_ENV production
+
+# Run the build command to build the environments.
+RUN npm run build-dev && npm run build-test && npm run build-prod
+
+# Run the build command to build the environments for the release channel
+# RUN npm run build-dev-release && npm run build-test-release && npm run build-prod-release
+
+# PRODUCTION ENVIRONMENT
+FROM nginx:1.24.0-alpine as PRODUCTION
+
+# Update OS package index and update packages to latest versions.
+RUN apk update && apk upgrade
+
+# Delete the default configuration file
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy our nginx configuration file
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
+# Copy the app bundle files we just built
+COPY --from=BUILD /app/dist-dev /app-dev
+COPY --from=BUILD /app/dist-test /app-test
+COPY --from=BUILD /app/dist-prod /app-prod
+
+# COPY --from=BUILD /app/dist-dev-release /app-dev-release
+# COPY --from=BUILD /app/dist-test-release /app-test-release
+# COPY --from=BUILD /app/dist-prod-release /app-prod-release
+
+COPY ./entrypoint.sh /entrypoint.sh
+
+RUN ["chmod", "+x", "/entrypoint.sh"]
+
+# Run nginx (in the foreground).
+ENTRYPOINT ["/entrypoint.sh"]

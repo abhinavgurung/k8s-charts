@@ -1,15 +1,19 @@
 {
   "name": "my-project",
-  "source": "src/index.html",
+  "source": "index.html",
   "scripts": {
-    "start": "parcel",
-    "build": "parcel build"
+    "start": "parcel serve ./index.html --port 3000",
+    "build-dev": "PORTAL_ENV=Development  parcel build ./index.html  --dist-dir dist-dev",
+    "build-test": "PORTAL_ENV=Test  parcel build ./index.html  --dist-dir dist-test",
+    "build-prod": "PORTAL_ENV=Production  parcel build ./index.html --dist-dir dist-prod"
   },
   "devDependencies": {
+    "buffer": "^6.0.3",
     "parcel": "latest",
     "process": "^0.11.10"
   },
   "dependencies": {
+    "axios": "^1.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }

@@ -1,0 +1,26 @@
+version: "3.4"
+
+services:
+
+  app:
+    restart: always
+    container_name: portal_app
+    build:
+      network: host
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - PORTAL_ENV=Local-development
+    ports:
+    - "3000:3000"
+
+  api:
+    container_name: portal_api
+    restart: always
+    build:
+      network: host
+      context: ./backend
+      dockerfile: Dockerfile
+    entrypoint: /app/entrypoint.sh
+    ports:
+      - "5000:5000"
