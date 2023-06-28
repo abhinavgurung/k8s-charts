@@ -5,7 +5,14 @@ import os,sys
 import logging
 import logging.config
 
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 from flask_cors import CORS
+port = '11211'
+host = 'memcached'
+memcached_uri = f'memcached://{host}:{port}'
+limiter = Limiter(storage_uri=memcached_uri, key_func=get_remote_address)
 
 def create_app():
     app = Flask(__name__)
@@ -17,6 +24,8 @@ def create_app():
 
     config = get_environment_config()
 
+    limiter.init_app(app)
+
     cors = CORS(app, origins=config.CORS_ORIGINS)
 
     app.config.from_object(config)
@@ -24,7 +33,13 @@ def create_app():
     # Register blueprints
     register_blueprints(app)
 
+    @app.route('/echo')
+    def hello():
+        return 'Hello, World!'
+
     return app
+
+
 
 
 def get_environment_config():

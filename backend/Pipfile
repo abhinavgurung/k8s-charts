@@ -9,6 +9,8 @@ gunicorn = "*"
 python-dotenv = "*"
 requests = "*"
 flask-cors = "*"
+flask-limiter = "*"
+pymemcache = "*"
 
 [dev-packages]
 

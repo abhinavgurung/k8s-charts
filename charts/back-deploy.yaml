@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: back-deploy
+  labels:
+    track: back
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: cont2
+          image: docker.io/decodeit191/sample-api
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: back-service
+spec:
+  ports:
+    - port: 80
+      targetPort: 5000
+  selector:
+    app: backend
