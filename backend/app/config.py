@@ -13,6 +13,7 @@ class BaseConfig:
 
     # Flask configuration
     SECRET_KEY = os.environ.get("SECRET_KEY") or "hard to guess"
+    CORS_ORIGINS = ["http://localhost:3000"]
     
 
 class DevelopmentConfig(BaseConfig):

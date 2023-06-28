@@ -9,6 +9,7 @@ requests_view = Blueprint('requests', __name__)
 
 @requests_view.route("/test", methods=["GET"])
 def get_test():
+    logging.warning("got api request")
     info = {
         "school" : 'Federal University Of Technology Owerri',
         "department" : "Biochemistry",

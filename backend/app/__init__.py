@@ -5,14 +5,20 @@ import os,sys
 import logging
 import logging.config
 
+from flask_cors import CORS
+
 def create_app():
     app = Flask(__name__)
 
     # Setup logging (should be done first before anything else so logging can apply to all subsequent code)
     # setup_logging(app)
 
+    
 
     config = get_environment_config()
+
+    cors = CORS(app, origins=config.CORS_ORIGINS)
+
     app.config.from_object(config)
 
     # Register blueprints

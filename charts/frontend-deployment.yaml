@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+  labels:
+    track: canary
+spec:
+  selector:
+    matchLabels:
+      any-name: my-app
+  template:
+    metadata:
+      labels:
+        any-name: my-app
+    spec:
+      containers:
+        - name: cont1
+          image: docker.io/decodeit191/sample-app
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  ports:
+    - port: 80
+      targetPort: 3000
+  selector:
+    any-name: my-app

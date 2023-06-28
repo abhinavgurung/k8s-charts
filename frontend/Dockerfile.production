@@ -21,7 +21,7 @@ COPY . /app
 RUN npm install -g npm@8.19.4
 
 # Install node production dependencies
-RUN npm install --silent --only=production
+RUN npm install
 
 # Optimize node.js apps for production
 ENV NODE_ENV production

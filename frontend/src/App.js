@@ -1,4 +1,5 @@
 import Users from "./users";
+import Test from "./Test";
 
 
 
@@ -7,6 +8,7 @@ export function App() {
     <>
       <h1>Hello world!</h1>
       <Users />
+      <Test />
     </>  
   );
 }
