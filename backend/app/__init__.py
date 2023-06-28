@@ -10,7 +10,7 @@ from flask_limiter.util import get_remote_address
 
 from flask_cors import CORS
 port = '11211'
-host = 'localhost'
+host = 'memcached'
 memcached_uri = f'memcached://{host}:{port}'
 limiter = Limiter(storage_uri=memcached_uri, key_func=get_remote_address)
 
