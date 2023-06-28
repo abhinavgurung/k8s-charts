@@ -20,6 +20,12 @@ spec:
           ports:
             - containerPort: 5000
 
+        - name: memcached
+          image: docker.io/memcached
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 11211
+
       restartPolicy: Always
 ---
 apiVersion: v1
