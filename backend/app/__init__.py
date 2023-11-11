@@ -1,6 +1,6 @@
 from app.config import DevelopmentConfig, TestConfig, ProductionConfig, UnitTestConfig
 
-from flask import Flask, request, g
+from flask import Flask, request, g, jsonify
 import os,sys
 import logging
 import logging.config
@@ -25,17 +25,29 @@ def create_app():
     config = get_environment_config()
 
     limiter.init_app(app)
-
-    cors = CORS(app, origins=config.CORS_ORIGINS)
-
     app.config.from_object(config)
 
+
+    # cors = CORS(app, origins=config.CORS_ORIGINS)
+    CORS(app)
+
+    
     # Register blueprints
     register_blueprints(app)
 
     @app.route('/echo')
     def hello():
         return 'Hello, World!'
+
+    @app.route("/test2", methods=["GET"])
+    def get_test():
+        logging.warning("got api request new...........")
+        info = {
+            "school" : 'Federal University Of Technology Owerri',
+            "department" : "Biochemistry",
+            'level': "500L"
+        }
+        return jsonify(info) # returning a JSON response
 
     return app
 
