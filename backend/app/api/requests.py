@@ -7,8 +7,7 @@ from flask import Blueprint, jsonify, request, g, make_response
 
 requests_view = Blueprint('requests', __name__)
 
-limiter.limit('1/day')(requests_view)
-
+limiter.limit('200/day')(requests_view)
 @requests_view.route("/test", methods=["GET"])
 def get_test():
     logging.warning("got api request new...........")
